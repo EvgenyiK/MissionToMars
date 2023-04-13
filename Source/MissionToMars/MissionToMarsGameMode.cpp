@@ -8,7 +8,7 @@
 AMissionToMarsGameMode::AMissionToMarsGameMode()
 {
 	// use our custom PlayerController class
-	PlayerControllerClass = AMissionToMarsPlayerController::StaticClass();
+	/*PlayerControllerClass = AMissionToMarsPlayerController::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/TopDown/Blueprints/BP_TopDownCharacter"));
@@ -22,5 +22,5 @@ AMissionToMarsGameMode::AMissionToMarsGameMode()
 	if(PlayerControllerBPClass.Class != NULL)
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
-	}
+	}*/
 }

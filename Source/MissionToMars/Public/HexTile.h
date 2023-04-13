@@ -6,21 +6,31 @@
 #include "GameFramework/Actor.h"
 #include "HexTile.generated.h"
 
+
+UENUM()
+enum class EHexTileType :uint8
+{
+	INVALID,
+	GRASS,
+	WATER,
+	MAX UMETA(Hidden)
+};
+
 UCLASS()
 class MISSIONTOMARS_API AHexTile : public AActor
 {
 	GENERATED_BODY()
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tile")
+	EHexTileType TileType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tile")
+	UStaticMeshComponent* TileMesh;
 	
 public:	
 	// Sets default values for this actor's properties
 	AHexTile();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };
