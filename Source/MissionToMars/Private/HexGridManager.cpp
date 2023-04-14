@@ -2,12 +2,12 @@
 
 
 #include "HexGridManager.h"
+#include "HexTile.h"
 
 // Sets default values
 AHexGridManager::AHexGridManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	
 
 }
 
@@ -16,12 +16,26 @@ void AHexGridManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	HexGrid2DArray.SetNumZeroed(GridWidth);
+	for (size_t i = 0; i < HexGrid2DArray.Num(); i++)
+	{
+		HexGrid2DArray[i].SetNumZeroed(GridWidth);
+	}
+
+	for (size_t y = 0; y < GridHeight; y++)
+	{
+		for (size_t x = 0; x < GridWidth; x++)
+		{
+			const bool oddRow = y % 2 == 1;
+			const float xPos = oddRow ? (x * TileHorizontalOffset) + OddRowHorizontalOffset: x * TileHorizontalOffset;
+			const float yPos = y * TileVerticalOffset;
+
+			TSubclassOf<AHexTile> tileToSpawn = GrassHexTile;
+			AHexTile* newTile = GetWorld()->SpawnActor<AHexTile>(tileToSpawn, FVector(FIntPoint(xPos,yPos)), FRotator::ZeroRotator);
+			newTile->TileIndex = FIntPoint(x, y);
+			HexGrid2DArray[x][y] = newTile;
+		}
+	}
 }
 
-// Called every frame
-void AHexGridManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

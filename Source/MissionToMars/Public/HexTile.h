@@ -21,6 +21,10 @@ class MISSIONTOMARS_API AHexTile : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(VisibleInstanceOnly, Category = "Tile")
+	FIntPoint TileIndex;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tile")
 	EHexTileType TileType;
