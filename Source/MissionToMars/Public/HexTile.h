@@ -13,6 +13,7 @@ enum class EHexTileType :uint8
 	INVALID,
 	GRASS,
 	WATER,
+	SAND,
 	MAX UMETA(Hidden)
 };
 

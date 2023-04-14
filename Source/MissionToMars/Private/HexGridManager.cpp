@@ -2,6 +2,7 @@
 
 
 #include "HexGridManager.h"
+#include "Math/UnrealMathUtility.h"
 #include "HexTile.h"
 
 // Sets default values
@@ -35,6 +36,7 @@ void AHexGridManager::BeginPlay()
 			{
 				tileToSpawn = WaterHexTile;
 			}
+			
 
 			AHexTile* newTile = GetWorld()->SpawnActor<AHexTile>(tileToSpawn, FVector(FIntPoint(xPos,yPos)), FRotator::ZeroRotator);
 			newTile->TileIndex = FIntPoint(x, y);
