@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MissionToMarsGameMode.h"
-#include "MissionToMarsPlayerController.h"
-#include "MissionToMarsCharacter.h"
+#include "Player/MissionToMarsPlayerController.h"
+#include "Player/MissionToMarsCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMissionToMarsGameMode::AMissionToMarsGameMode()

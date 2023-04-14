@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "HexGridManager.h"
+#include "Hex/HexGridManager.h"
 #include "Math/UnrealMathUtility.h"
-#include "HexTile.h"
+#include "Hex/HexTile.h"
 
 // Sets default values
 AHexGridManager::AHexGridManager()
