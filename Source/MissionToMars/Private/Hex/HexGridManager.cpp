@@ -31,7 +31,7 @@ void AHexGridManager::BeginPlay()
 			const float xPos = oddRow ? (x * TileHorizontalOffset) + OddRowHorizontalOffset: x * TileHorizontalOffset;
 			const float yPos = y * TileVerticalOffset;
 
-			TSubclassOf<AHexTile> tileToSpawn = GrassHexTile;
+			TSubclassOf<AHexTile> tileToSpawn = SandHexTile;
 			if (FMath::RandRange(0.f, 1.f) <= ChanceOfWater)
 			{
 				tileToSpawn = WaterHexTile;
