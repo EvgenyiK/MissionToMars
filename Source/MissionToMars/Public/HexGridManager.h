@@ -16,7 +16,7 @@ class MISSIONTOMARS_API AHexGridManager : public AActor
 protected:
 	TArray<TArray<AHexTile*>> HexGrid2DArray;
 
-	UPROPERTY(EditAnyWhere, Category = "HexGrid|Layot")
+	UPROPERTY(EditAnyWhere, Category = "HexGrid|Layout")
 	int32 GridWidth;
 
 	UPROPERTY(EditAnyWhere, Category = "HexGrid|Layout")
@@ -33,6 +33,12 @@ protected:
 
 	UPROPERTY(EditAnyWhere, Category = "HexGrid|Setup")
 	TSubclassOf<AHexTile> GrassHexTile;
+
+	UPROPERTY(EditAnyWhere, Category = "HexGrid|Setup")
+	TSubclassOf<AHexTile> WaterHexTile;
+
+	UPROPERTY(EditAnyWhere, Category = "HexGrid|Setup")
+	float ChanceOfWater;
 
 public:	
 	// Sets default values for this actor's properties
