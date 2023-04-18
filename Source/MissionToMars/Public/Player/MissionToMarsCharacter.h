@@ -30,7 +30,11 @@ public:
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	void MoveForward(float Amount);
+	void MoveRight(float Amount);
 
 };
 

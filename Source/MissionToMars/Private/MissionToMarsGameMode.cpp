@@ -3,7 +3,7 @@
 #include "MissionToMarsGameMode.h"
 #include "Player/MissionToMarsPlayerController.h"
 #include "Player/MissionToMarsCharacter.h"
-#include "UObject/ConstructorHelpers.h"
+
 
 AMissionToMarsGameMode::AMissionToMarsGameMode()
 {
