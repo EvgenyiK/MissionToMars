@@ -1,3 +1,0 @@
-# MissionToMars
-
-#KB3Dchallenge
