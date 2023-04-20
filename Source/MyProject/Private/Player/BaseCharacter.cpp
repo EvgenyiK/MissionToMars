@@ -45,6 +45,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("LookUp",this,&ABaseCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("TurnAround",this,&ABaseCharacter::AddControllerYawInput);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this,  &ABaseCharacter::Jump);
 }
 
 void ABaseCharacter::MoveForward(float Amount)
