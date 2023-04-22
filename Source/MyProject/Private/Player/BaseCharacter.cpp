@@ -47,16 +47,35 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("TurnAround",this,&ABaseCharacter::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this,  &ABaseCharacter::Jump);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this,  &ABaseCharacter::OnstartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this,  &ABaseCharacter::OnstopRunning);
+}
+
+bool ABaseCharacter::IsRunning() const
+{
+	return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
 }
 
 void ABaseCharacter::MoveForward(float Amount)
 {
+	IsMovingForward = Amount >0.0f;
 	AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void ABaseCharacter::MoveRight(float Amount)
 {
 	AddMovementInput(GetActorRightVector(), Amount);
+}
+
+void ABaseCharacter::OnstartRunning()
+{
+	WantsToRun = true;
+	
+}
+
+void ABaseCharacter::OnstopRunning()
+{
+	WantsToRun = false;
 }
 
 
