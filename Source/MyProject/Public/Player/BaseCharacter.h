@@ -6,9 +6,12 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+
+//class UBaseHealthComponent;
 class UCameraComponent;
 class USpringArmComponent;
-
+class UBaseHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class MYPROJECT_API ABaseCharacter : public ACharacter
@@ -25,6 +28,13 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UBaseHealthComponent* HealthComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UTextRenderComponent* HealthTextComponent; 
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
