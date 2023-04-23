@@ -55,6 +55,8 @@ private:
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
 
-	void OnstartRunning();
-	void OnstopRunning();
+	void OnStartRunning();
+	void OnStopRunning();
+
+	
 };

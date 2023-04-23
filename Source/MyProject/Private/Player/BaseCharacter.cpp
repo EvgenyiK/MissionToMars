@@ -8,6 +8,9 @@
 #include "Component/BaseHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All);
+
+
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -56,8 +59,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("TurnAround",this,&ABaseCharacter::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this,  &ABaseCharacter::Jump);
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this,  &ABaseCharacter::OnstartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this,  &ABaseCharacter::OnstopRunning);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this,  &ABaseCharacter::OnStartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this,  &ABaseCharacter::OnStopRunning);
 }
 
 bool ABaseCharacter::IsRunning() const
@@ -76,15 +79,16 @@ void ABaseCharacter::MoveRight(float Amount)
 	AddMovementInput(GetActorRightVector(), Amount);
 }
 
-void ABaseCharacter::OnstartRunning()
+void ABaseCharacter::OnStartRunning()
 {
 	WantsToRun = true;
 	
 }
 
-void ABaseCharacter::OnstopRunning()
+void ABaseCharacter::OnStopRunning()
 {
 	WantsToRun = false;
 }
+
 
 
