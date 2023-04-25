@@ -10,7 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 
-DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All);
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
 
 // Sets default values
@@ -42,6 +42,8 @@ void ABaseCharacter::BeginPlay()
 	OnHealthChanged(HealthComponent->GetHealth());
 	HealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
+
+	LandedDelegate.AddDynamic(this, &ABaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
@@ -96,7 +98,7 @@ void ABaseCharacter::OnStopRunning()
 
 void ABaseCharacter::OnDeath()
 {
-	UE_LOG(BaseCharacterLog, Display, TEXT("player %s is dead"), *GetName());
+	UE_LOG(LogBaseCharacter, Display, TEXT("player %s is dead"), *GetName());
 	PlayAnimMontage(DeathAnimMontage);
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(5.0f);
@@ -109,6 +111,20 @@ void ABaseCharacter::OnDeath()
 void ABaseCharacter::OnHealthChanged(float Health)
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+void ABaseCharacter::OnGroundLanded(const FHitResult& Hit)
+{
+	const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+	UE_LOG(LogBaseCharacter, Display, TEXT("On landed: %f"), FallVelocityZ);
+
+	if (FallVelocityZ < LandedDamageVelocity.X) return;
+
+	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage,
+		FallVelocityZ);
+	UE_LOG(LogBaseCharacter, Display, TEXT("FinalDamage: %f"), FinalDamage);
+	
+	//TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr );
 }
 
 
