@@ -3,6 +3,7 @@
 
 #include "Component/BaseHealthComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
 UBaseHealthComponent::UBaseHealthComponent()
 {
@@ -31,6 +32,7 @@ void UBaseHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, co
 			class AController* InsigatedBy, AActor* DamageCauser)
 {
 	Health -= Damage;
+	UE_LOG(LogHealthComponent, Display, TEXT("Damage: %f"), Damage);
 }
 
 
