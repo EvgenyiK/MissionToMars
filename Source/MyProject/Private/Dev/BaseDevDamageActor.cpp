@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
+
 // Sets default values
 ABaseDevDamageActor::ABaseDevDamageActor()
 {
@@ -28,6 +29,6 @@ void ABaseDevDamageActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 24, SphereColor);
 	UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, GetActorLocation(), Radius,
-		nullptr, {}, this, nullptr, DoFullDamage);
+		DamageType, {}, this, nullptr, DoFullDamage);
 }
 
