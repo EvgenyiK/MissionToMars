@@ -115,9 +115,8 @@ void ABaseCharacter::OnHealthChanged(float Health)
 
 void ABaseCharacter::OnGroundLanded(const FHitResult& Hit)
 {
-	const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
-	UE_LOG(LogBaseCharacter, Display, TEXT("On landed: %f"), FallVelocityZ);
-
+	const auto FallVelocityZ = -GetVelocity().Z;
+	
 	if (FallVelocityZ < LandedDamageVelocity.X) return;
 
 	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage,
