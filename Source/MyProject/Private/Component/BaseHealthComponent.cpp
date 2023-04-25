@@ -2,8 +2,7 @@
 
 
 #include "Component/BaseHealthComponent.h"
-#include "Dev/FireDamageType.h"
-#include "Dev/IceDamageType.h"
+#include "Math/UnrealMathUtility.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -22,6 +21,7 @@ void UBaseHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHealth;
+	OnHealthChanged.Broadcast(Health);
 	
 	AActor* ComponentOwner = GetOwner();
 	if (ComponentOwner)
@@ -33,19 +33,15 @@ void UBaseHealthComponent::BeginPlay()
 void UBaseHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, const class UDamageType* DamageType,
 			class AController* InsigatedBy, AActor* DamageCauser)
 {
-	Health -= Damage;
-	UE_LOG(LogHealthComponent, Display, TEXT("Damage: %f"), Damage);
-
-	if(DamageType)
+	if (Damage <= 0.0f || IsDead()) return;
+	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
+	OnHealthChanged.Broadcast(Health);
+	
+	if (IsDead())
 	{
-		if(DamageType->IsA<UFireDamageType>())
-		{
-			UE_LOG(LogHealthComponent, Display, TEXT("So hooot"));
-		}else if (DamageType->IsA<UIceDamageType>())
-		{
-			UE_LOG(LogHealthComponent, Display, TEXT("coold"));
-		}
+		OnDeath.Broadcast();
 	}
+	
 }
 
 

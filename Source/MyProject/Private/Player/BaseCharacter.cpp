@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Component/BaseHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(BaseCharacterLog, All, All);
 
@@ -35,15 +36,17 @@ void ABaseCharacter::BeginPlay()
 	Super::BeginPlay();
 	check(HealthComponent);
 	check(HealthTextComponent);
+	check(GetCharacterMovement());
+
+	OnHealthChanged(HealthComponent->GetHealth());
+	HealthComponent->OnDeath.AddUObject(this, &ABaseCharacter::OnDeath);
+	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	const auto Health = HealthComponent->GetHealth();
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
@@ -88,6 +91,19 @@ void ABaseCharacter::OnStartRunning()
 void ABaseCharacter::OnStopRunning()
 {
 	WantsToRun = false;
+}
+
+void ABaseCharacter::OnDeath()
+{
+	UE_LOG(BaseCharacterLog, Display, TEXT("player %s is dead"), *GetName());
+	PlayAnimMontage(DeathAnimMontage);
+	GetCharacterMovement()->DisableMovement();
+	SetLifeSpan(5.0f);
+}
+
+void ABaseCharacter::OnHealthChanged(float Health)
+{
+	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 
