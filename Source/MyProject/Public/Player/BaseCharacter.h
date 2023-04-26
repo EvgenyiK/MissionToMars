@@ -13,6 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UBaseHealthComponent;
 class UTextRenderComponent;
+class ABaseWeapon;
 
 UCLASS()
 class MYPROJECT_API ABaseCharacter : public ACharacter
@@ -47,6 +48,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FVector2D LandedDamage = FVector2d(10.0f, 100.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ABaseWeapon>WeaponClass;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,4 +80,6 @@ private:
 
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);
+
+	void SpawnWeapon();
 };

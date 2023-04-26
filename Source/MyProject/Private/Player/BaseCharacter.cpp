@@ -9,6 +9,7 @@
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Weapon/BaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -29,6 +30,7 @@ ABaseCharacter::ABaseCharacter()
 	HealthComponent = CreateDefaultSubobject<UBaseHealthComponent>("BaseHealthComponent");
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
+	
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +46,8 @@ void ABaseCharacter::BeginPlay()
 	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
 
 	LandedDelegate.AddDynamic(this, &ABaseCharacter::OnGroundLanded);
+
+	ABaseCharacter::SpawnWeapon();
 }
 
 // Called every frame
@@ -124,6 +128,17 @@ void ABaseCharacter::OnGroundLanded(const FHitResult& Hit)
 	UE_LOG(LogBaseCharacter, Display, TEXT("FinalDamage: %f"), FinalDamage);
 	
 	//TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr );
+}
+
+void ABaseCharacter::SpawnWeapon()
+{
+	if (!GetWorld()) return;
+	const auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+	if (Weapon)
+	{
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+		Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket1");
+	}
 }
 
 
