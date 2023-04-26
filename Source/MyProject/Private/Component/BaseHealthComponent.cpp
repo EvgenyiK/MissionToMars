@@ -3,7 +3,6 @@
 
 #include "Component/BaseHealthComponent.h"
 
-#include "ModuleDescriptor.h"
 #include "Math/UnrealMathUtility.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
