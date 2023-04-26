@@ -23,6 +23,7 @@ ABaseCharacter::ABaseCharacter()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
+	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
@@ -47,7 +48,7 @@ void ABaseCharacter::BeginPlay()
 
 	LandedDelegate.AddDynamic(this, &ABaseCharacter::OnGroundLanded);
 
-	ABaseCharacter::SpawnWeapon();
+	SpawnWeapon();
 }
 
 // Called every frame
