@@ -8,8 +8,9 @@
 #include "Component/BaseHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/MWeaponComponent.h"
 #include "GameFramework/Controller.h"
-#include "Weapon/BaseWeapon.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -17,21 +18,22 @@ DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
-	
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	HealthComponent = CreateDefaultSubobject<UBaseHealthComponent>("BaseHealthComponent");
 	HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
 	HealthTextComponent->SetupAttachment(GetRootComponent());
-	
+
+	WeaponComponent = CreateDefaultSubobject<UMWeaponComponent>("WeaponComponent");
 }
 
 // Called when the game starts or when spawned
@@ -47,8 +49,6 @@ void ABaseCharacter::BeginPlay()
 	HealthComponent->OnHealthChanged.AddUObject(this, &ABaseCharacter::OnHealthChanged);
 
 	LandedDelegate.AddDynamic(this, &ABaseCharacter::OnGroundLanded);
-
-	SpawnWeapon();
 }
 
 // Called every frame
@@ -62,16 +62,18 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
+	check(WeaponComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward",this,&ABaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight",this,&ABaseCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 
-	PlayerInputComponent->BindAxis("LookUp",this,&ABaseCharacter::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("TurnAround",this,&ABaseCharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &ABaseCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("TurnAround", this, &ABaseCharacter::AddControllerYawInput);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this,  &ABaseCharacter::Jump);
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this,  &ABaseCharacter::OnStartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this,  &ABaseCharacter::OnStopRunning);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABaseCharacter::Jump);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ABaseCharacter::OnStartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::OnStopRunning);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UMWeaponComponent::Fire);
 }
 
 bool ABaseCharacter::IsRunning() const
@@ -81,7 +83,7 @@ bool ABaseCharacter::IsRunning() const
 
 void ABaseCharacter::MoveForward(float Amount)
 {
-	IsMovingForward = Amount >0.0f;
+	IsMovingForward = Amount > 0.0f;
 	AddMovementInput(GetActorForwardVector(), Amount);
 }
 
@@ -93,7 +95,6 @@ void ABaseCharacter::MoveRight(float Amount)
 void ABaseCharacter::OnStartRunning()
 {
 	WantsToRun = true;
-	
 }
 
 void ABaseCharacter::OnStopRunning()
@@ -121,26 +122,12 @@ void ABaseCharacter::OnHealthChanged(float Health)
 void ABaseCharacter::OnGroundLanded(const FHitResult& Hit)
 {
 	const auto FallVelocityZ = -GetVelocity().Z;
-	
+
 	if (FallVelocityZ < LandedDamageVelocity.X) return;
 
 	const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage,
-		FallVelocityZ);
+	                                                           FallVelocityZ);
 	UE_LOG(LogBaseCharacter, Display, TEXT("FinalDamage: %f"), FinalDamage);
-	
+
 	//TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr );
 }
-
-void ABaseCharacter::SpawnWeapon()
-{
-	if (!GetWorld()) return;
-	const auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
-	if (Weapon)
-	{
-		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-		Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket1");
-	}
-}
-
-
-

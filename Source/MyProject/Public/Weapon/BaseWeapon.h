@@ -18,6 +18,8 @@ public:
 	
 	ABaseWeapon();
 
+	virtual void Fire();
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
