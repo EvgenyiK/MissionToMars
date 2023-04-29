@@ -29,13 +29,17 @@ void UMWeaponComponent::SpawnWeapon()
 	
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
-	CurrentWeapon->SetOwner(Character);
+	CurrentWeapon->SetOwner(Character);	
 }
 
-void UMWeaponComponent::Fire()
+void UMWeaponComponent::StartFire()
 {
 	if (!CurrentWeapon) return;
+	CurrentWeapon->StartFire();
+}
 
-	CurrentWeapon->Fire();
-	
+void UMWeaponComponent::StopFire()
+{
+	if (!CurrentWeapon) return;
+	CurrentWeapon->StopFire();
 }

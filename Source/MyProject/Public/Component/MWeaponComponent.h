@@ -14,7 +14,8 @@ class MYPROJECT_API UMWeaponComponent : public UActorComponent
 public:
 	UMWeaponComponent();
 
-	void Fire();
+	void StartFire();
+	void StopFire();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
