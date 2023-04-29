@@ -9,7 +9,9 @@
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/MWeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Controller.h"
+#include "Engine/DamageEvents.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
@@ -112,6 +114,8 @@ void ABaseCharacter::OnDeath()
 	{
 		Controller->ChangeState(NAME_Spectating);
 	}
+
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)
@@ -129,5 +133,5 @@ void ABaseCharacter::OnGroundLanded(const FHitResult& Hit)
 	                                                           FallVelocityZ);
 	UE_LOG(LogBaseCharacter, Display, TEXT("FinalDamage: %f"), FinalDamage);
 
-	//TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr );
+	TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr );
 }
