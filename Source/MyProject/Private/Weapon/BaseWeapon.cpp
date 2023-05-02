@@ -4,7 +4,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
-#include "Engine/DamageEvents.h"
+
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
@@ -81,11 +81,3 @@ void ABaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, cons
 	                                     CollisionParams);
 }
 
-void ABaseWeapon::MakeDamage(FHitResult& HitResult)
-{
-	const auto DamageActor = HitResult.GetActor();
-	if (!DamageActor) return;
-
-	DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(),
-	                        this);
-}

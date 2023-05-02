@@ -4,6 +4,7 @@
 #include "Weapon/RifleWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/DamageEvents.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 
@@ -57,4 +58,13 @@ bool ARifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);
 	TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
 	return true;
+}
+
+void ARifleWeapon::MakeDamage(FHitResult& HitResult)
+{
+	const auto DamageActor = HitResult.GetActor();
+	if (!DamageActor) return;
+
+	DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(),
+							this);
 }

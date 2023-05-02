@@ -22,6 +22,7 @@ class MYPROJECT_API ALauncherWeapon : public ABaseWeapon
 
 public:
 	virtual void StartFire() override;
+	
 
 protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "Weapon")
