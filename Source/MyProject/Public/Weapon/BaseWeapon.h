@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,14 +11,13 @@ UCLASS()
 class MYPROJECT_API ABaseWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	
+
+public:
 	ABaseWeapon();
 
 	virtual void StartFire();
 	virtual void StopFire();
-	
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
@@ -34,20 +31,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float DamageAmount = 10.0f;
 
-	
 
-
-	
 	virtual void BeginPlay() override;
 	virtual void MakeShot();
-	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd)const;
-	
+	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
+
 	APlayerController* GetPlayerController() const;
 	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
 	FVector GetMuzzleWorldLocation() const;
-	
+
 	void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const;
 	void MakeDamage(FHitResult& HitResult);
-
-
 };
