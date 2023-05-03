@@ -77,6 +77,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &ABaseCharacter::OnStopRunning);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UMWeaponComponent::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UMWeaponComponent::StopFire);
+	PlayerInputComponent->BindAction("NextWeapon", IE_Released, WeaponComponent, &UMWeaponComponent::NextWeapon);
 }
 
 bool ABaseCharacter::IsRunning() const
@@ -117,6 +118,7 @@ void ABaseCharacter::OnDeath()
 	}
 
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	WeaponComponent->StopFire();
 }
 
 void ABaseCharacter::OnHealthChanged(float Health)

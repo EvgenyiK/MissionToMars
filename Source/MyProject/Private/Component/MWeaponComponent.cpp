@@ -13,23 +13,65 @@ void UMWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnWeapon();
+	CurrentWeaponIndex = 0;
+	SpawnWeapons();
+	EquipWeapon(CurrentWeaponIndex);
+}
+
+void UMWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	CurrentWeapon = nullptr;
+	for (auto Weapon : Weapons)
+	{
+		Weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Weapon->Destroy();
+	}
+	Weapons.Empty();
+	Super::EndPlay(EndPlayReason);
 }
 
 
-void UMWeaponComponent::SpawnWeapon()
+void UMWeaponComponent::SpawnWeapons()
 {
-	if (!GetWorld()) return;
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character || !GetWorld()) return;
 
+	for (auto WeaponClass : WeaponClasses)
+	{
+		auto Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
+		if (!Weapon) continue;
+		Weapon->SetOwner(Character);
+		Weapons.Add(Weapon);
+
+		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorySocketName);
+	}
+}
+
+
+void UMWeaponComponent::AttachWeaponToSocket(ABaseWeapon* Weapon, USceneComponent* SceneComponent,
+                                             const FName& SocketName)
+{
+	if(!Weapon || !SceneComponent) return;
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+	Weapon->AttachToComponent(SceneComponent, AttachmentRules, SocketName);
+}
+
+void UMWeaponComponent::EquipWeapon(int32 WeaponIndex)
+{	
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character) return;
 
-	CurrentWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass);
-	if (!CurrentWeapon) return;
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopFire();
+		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
+	}
 	
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachPointName);
-	CurrentWeapon->SetOwner(Character);	
+
+
+	CurrentWeapon = Weapons[WeaponIndex];
+	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+	
 }
 
 void UMWeaponComponent::StartFire()
@@ -42,4 +84,10 @@ void UMWeaponComponent::StopFire()
 {
 	if (!CurrentWeapon) return;
 	CurrentWeapon->StopFire();
+}
+
+void UMWeaponComponent::NextWeapon()
+{
+	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
+	EquipWeapon(CurrentWeaponIndex);
 }
