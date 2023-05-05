@@ -1,7 +1,9 @@
 #include "Component/MWeaponComponent.h"
 #include "Weapon/BaseWeapon.h"
 #include "GameFramework/Character.h"
+#include "Animations/EquipFinishedAnimNotify.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
 UMWeaponComponent::UMWeaponComponent()
 {
@@ -14,6 +16,7 @@ void UMWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentWeaponIndex = 0;
+	InitAnimations();
 	SpawnWeapons();
 	EquipWeapon(CurrentWeaponIndex);
 }
@@ -67,11 +70,43 @@ void UMWeaponComponent::EquipWeapon(int32 WeaponIndex)
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
 	
-
-
 	CurrentWeapon = Weapons[WeaponIndex];
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
-	
+	PlayAnimMontage(EquipAnimMontage);
+}
+
+void UMWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character) return;
+
+	Character->PlayAnimMontage(Animation);
+}
+
+void UMWeaponComponent::InitAnimations()
+{
+	if(!EquipAnimMontage) return;
+	const auto NotifyEvents = EquipAnimMontage->Notifies;
+	for (auto NotifyEvent : NotifyEvents)
+	{
+		auto EquipFinishedNotify = Cast<UEquipFinishedAnimNotify>(NotifyEvent.Notify);
+		if (EquipFinishedNotify)
+		{
+			EquipFinishedNotify->OnNotified.AddUObject(this, &UMWeaponComponent::OnEquipFinished);
+			break;
+		}
+	}
+}
+
+void UMWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+	if (!Character) return;
+
+	if(Character->GetMesh() == MeshComponent)
+	{
+		UE_LOG(LogWeaponComponent, Display, TEXT("Equip finished"));
+	}
 }
 
 void UMWeaponComponent::StartFire()
