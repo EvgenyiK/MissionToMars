@@ -54,13 +54,13 @@ void UMWeaponComponent::SpawnWeapons()
 void UMWeaponComponent::AttachWeaponToSocket(ABaseWeapon* Weapon, USceneComponent* SceneComponent,
                                              const FName& SocketName)
 {
-	if(!Weapon || !SceneComponent) return;
+	if (!Weapon || !SceneComponent) return;
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 	Weapon->AttachToComponent(SceneComponent, AttachmentRules, SocketName);
 }
 
 void UMWeaponComponent::EquipWeapon(int32 WeaponIndex)
-{	
+{
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
 	if (!Character) return;
 
@@ -69,9 +69,10 @@ void UMWeaponComponent::EquipWeapon(int32 WeaponIndex)
 		CurrentWeapon->StopFire();
 		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
-	
+
 	CurrentWeapon = Weapons[WeaponIndex];
 	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+	//EquipAnimInProgress = true;
 	PlayAnimMontage(EquipAnimMontage);
 }
 
@@ -85,7 +86,7 @@ void UMWeaponComponent::PlayAnimMontage(UAnimMontage* Animation)
 
 void UMWeaponComponent::InitAnimations()
 {
-	if(!EquipAnimMontage) return;
+	if (!EquipAnimMontage) return;
 	const auto NotifyEvents = EquipAnimMontage->Notifies;
 	for (auto NotifyEvent : NotifyEvents)
 	{
@@ -101,13 +102,20 @@ void UMWeaponComponent::InitAnimations()
 void UMWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
-	if (!Character) return;
-
-	if(Character->GetMesh() == MeshComponent)
-	{
-		UE_LOG(LogWeaponComponent, Display, TEXT("Equip finished"));
-	}
+	if (!Character || MeshComponent != Character->GetMesh()) return;
+	
+	//EquipAnimInProgress = false;
 }
+
+/*bool UMWeaponComponent::CanFire() const
+{
+	return CurrentWeapon && !EquipAnimInProgress;
+}*/
+
+/*bool UMWeaponComponent::CanEquip() const
+{
+	return !EquipAnimInProgress;
+}*/
 
 void UMWeaponComponent::StartFire()
 {
@@ -123,6 +131,8 @@ void UMWeaponComponent::StopFire()
 
 void UMWeaponComponent::NextWeapon()
 {
+	//if (!CanEquip())return;
+	
 	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
 	EquipWeapon(CurrentWeaponIndex);
 }
