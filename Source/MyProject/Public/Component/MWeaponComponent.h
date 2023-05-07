@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "MyProject/Public/Coretypes.h"
 #include "MWeaponComponent.generated.h"
 
 class ABaseWeapon;

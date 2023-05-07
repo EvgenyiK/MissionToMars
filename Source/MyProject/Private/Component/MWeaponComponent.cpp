@@ -14,7 +14,7 @@ UMWeaponComponent::UMWeaponComponent()
 void UMWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	CurrentWeaponIndex = 0;
 	InitAnimations();
 	SpawnWeapons();
@@ -95,6 +95,10 @@ void UMWeaponComponent::InitAnimations()
 		{
 			EquipFinishedNotify->OnNotified.AddUObject(this, &UMWeaponComponent::OnEquipFinished);
 			break;
+		}else
+		{
+			UE_LOG(LogWeaponComponent, Error, TEXT("Equip anim notify is forgotten to set"));
+			checkNoEntry();
 		}
 	}
 }
