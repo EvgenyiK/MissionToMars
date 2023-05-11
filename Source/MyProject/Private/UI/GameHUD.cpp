@@ -8,7 +8,7 @@
 void AGameHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	DrawCrossHair();
+	//DrawCrossHair();
 }
 
 void AGameHUD::BeginPlay()

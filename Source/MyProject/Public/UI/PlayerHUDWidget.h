@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MyProject/Public/Coretypes.h"
 #include "PlayerHUDWidget.generated.h"
 
 /**
@@ -17,4 +18,6 @@ class MYPROJECT_API UPlayerHUDWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	float GetHealthPercentt() const;
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	bool GetWeaponUiData(FWeaponUIData& UIData) const;
 };

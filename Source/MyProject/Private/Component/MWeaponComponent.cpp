@@ -140,3 +140,15 @@ void UMWeaponComponent::NextWeapon()
 	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
 	EquipWeapon(CurrentWeaponIndex);
 }
+
+bool UMWeaponComponent::GetWeaponUiData(FWeaponUIData& UIData)const
+{
+	{
+		if (CurrentWeapon)
+		{
+			UIData = CurrentWeapon->GetUIData();
+			return true;
+		}
+		return false;
+	};
+}

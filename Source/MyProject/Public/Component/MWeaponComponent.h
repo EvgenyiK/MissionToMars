@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "MyProject/Public/Coretypes.h"
+#include "Weapon/BaseWeapon.h"
 #include "MWeaponComponent.generated.h"
 
 class ABaseWeapon;
@@ -19,6 +20,9 @@ public:
 	void StopFire();
 	void NextWeapon();
 
+	bool GetWeaponUiData(FWeaponUIData& UIData) const;
+	
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TArray<TSubclassOf<ABaseWeapon>> WeaponClasses;
