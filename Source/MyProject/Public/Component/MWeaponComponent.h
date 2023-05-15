@@ -20,8 +20,8 @@ public:
 	void StopFire();
 	void NextWeapon();
 
-	bool GetWeaponUiData(FWeaponUIData& UIData) const;
-	
+	bool GetCurrentWeaponUiData(FWeaponUIData& UIData) const;
+	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData)const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")

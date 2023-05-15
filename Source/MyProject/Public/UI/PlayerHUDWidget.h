@@ -10,6 +10,9 @@
 /**
  * 
  */
+
+class UMWeaponComponent;
+
 UCLASS()
 class MYPROJECT_API UPlayerHUDWidget : public UUserWidget
 {
@@ -18,6 +21,13 @@ class MYPROJECT_API UPlayerHUDWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	float GetHealthPercentt() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "UI")
-	bool GetWeaponUiData(FWeaponUIData& UIData) const;
+	bool GetCurrentWeaponUiData(FWeaponUIData& UIData) const;
+	
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
+
+private:
+	UMWeaponComponent* UGetWeaponComponent() const;
 };

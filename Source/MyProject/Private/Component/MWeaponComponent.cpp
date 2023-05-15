@@ -141,12 +141,24 @@ void UMWeaponComponent::NextWeapon()
 	EquipWeapon(CurrentWeaponIndex);
 }
 
-bool UMWeaponComponent::GetWeaponUiData(FWeaponUIData& UIData)const
+bool UMWeaponComponent::GetCurrentWeaponUiData(FWeaponUIData& UIData)const
 {
 	{
 		if (CurrentWeapon)
 		{
 			UIData = CurrentWeapon->GetUIData();
+			return true;
+		}
+		return false;
+	};
+}
+
+bool UMWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
+{
+	{
+		if (CurrentWeapon)
+		{
+			AmmoData = CurrentWeapon->GetAmmoData();
 			return true;
 		}
 		return false;
