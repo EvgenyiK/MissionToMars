@@ -11,6 +11,7 @@
  * 
  */
 
+class UBaseHealthComponent;
 class UMWeaponComponent;
 
 UCLASS()
@@ -28,6 +29,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	bool IsPlayerAlive() const;
+
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	bool IsPlayerSpectating() const;
+	
 private:
-	UMWeaponComponent* UGetWeaponComponent() const;
+	UMWeaponComponent* GetWeaponComponent() const;
+	UBaseHealthComponent* GetHealthComponent() const;
 };
