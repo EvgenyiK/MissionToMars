@@ -164,3 +164,8 @@ bool UMWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 		return false;
 	};
 }
+
+bool UMWeaponComponent::TryToAddAmmo(TSubclassOf<ABaseWeapon> WeaponType, int32 ClipsAmount)
+{
+	
+}
