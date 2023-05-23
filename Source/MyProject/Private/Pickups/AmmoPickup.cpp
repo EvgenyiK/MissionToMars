@@ -1,5 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "Pickups/AmmoPickup.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, All, All);
+
+bool AAmmoPickup::GivePickupTo(APawn* PlayerPawn)
+{
+	UE_LOG(LogAmmoPickup, Display, TEXT("Ammo was taken"));
+	return true;
+}
