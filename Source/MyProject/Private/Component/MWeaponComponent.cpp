@@ -167,5 +167,13 @@ bool UMWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 
 bool UMWeaponComponent::TryToAddAmmo(TSubclassOf<ABaseWeapon> WeaponType, int32 ClipsAmount)
 {
-	
+	for(const auto Weapon: Weapons)
+	{
+		if (Weapon && Weapon->IsA(WeaponType))
+		{
+			return Weapon->TryToAddAmmo(ClipsAmount);
+		}
+	}
+
+	return false;
 }

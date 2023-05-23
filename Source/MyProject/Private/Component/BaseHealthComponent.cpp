@@ -17,6 +17,17 @@ UBaseHealthComponent::UBaseHealthComponent()
 	
 }
 
+bool UBaseHealthComponent::TryToAddHealth(float HealthAmount)
+{
+	if(IsDead() || IsHealthFull()) return false;
+	SetHealth(Health + HealthAmount);
+	return true;
+}
+
+bool UBaseHealthComponent::IsHealthFull() const
+{
+	return FMath::IsNearlyEqual(Health,0.0f,MaxHealth);
+}
 
 
 void UBaseHealthComponent::BeginPlay()
@@ -57,7 +68,7 @@ void UBaseHealthComponent::HealUpdate()
 	SetHealth(Health + HealModifier);
 	OnHealthChanged.Broadcast(Health);
 
-	if (FMath::IsNearlyEqual(Health , MaxHealth) && GetWorld())
+	if (IsHealthFull() && GetWorld())
 	{
 		GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
 	}

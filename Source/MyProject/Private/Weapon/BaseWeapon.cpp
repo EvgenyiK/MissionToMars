@@ -24,6 +24,8 @@ void ABaseWeapon::StopFire()
 {
 }
 
+
+
 void ABaseWeapon::MakeShot()
 {
 }
@@ -122,3 +124,39 @@ void ABaseWeapon::LogAmmo()
 	UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
 }
 
+bool ABaseWeapon::IsAmmoFull() const
+{
+	return CurrentAmmo.Clips == DefaultAmmo.Clips &&
+		CurrentAmmo.Bullets == DefaultAmmo.Bullets;
+}
+
+bool ABaseWeapon::TryToAddAmmo(int32 ClipsAmount)
+{
+	if (CurrentAmmo.Infinite || IsAmmoFull() || ClipsAmount <= 0) return false;
+
+	if (IsAmmoEmpty())
+	{
+		UE_LOG(LogBaseWeapon, Display, TEXT("Ammo was empty"));
+		CurrentAmmo.Clips = FMath::Clamp(ClipsAmount, 0, DefaultAmmo.Clips);
+		
+	}else if (CurrentAmmo.Clips < DefaultAmmo.Clips)
+	{
+		const auto NextClipsAmount = CurrentAmmo.Clips + ClipsAmount;
+		if (DefaultAmmo.Clips - NextClipsAmount >= 0)
+		{
+			CurrentAmmo.Clips = NextClipsAmount;
+			UE_LOG(LogBaseWeapon, Display, TEXT("Clips were added"));
+		}else
+		{
+			CurrentAmmo.Clips = DefaultAmmo.Clips;
+			CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+			UE_LOG(LogBaseWeapon, Display, TEXT("Ammo is full now"));
+		}
+	}else
+	{
+		CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+		UE_LOG(LogBaseWeapon, Display, TEXT("Bullets were added"));
+	}
+
+	return true;
+}

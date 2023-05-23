@@ -10,12 +10,12 @@ DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, All, All);
 
 bool AAmmoPickup::GivePickupTo(APawn* PlayerPawn)
 {
-	const auto Component = PlayerPawn->GetComponentByClass(UMWeaponComponent::StaticClass());
-
-	const auto HealthComponent = Cast<UBaseHealthComponent>(Component);
+	//подумать над HealthComponent
+	const auto HealthComponent = Cast<UBaseHealthComponent>(PlayerPawn);
 	if (!HealthComponent || HealthComponent->IsDead()) return false;
-	
-	const auto WeaponComponent = Cast<UMWeaponComponent>(Component);
+
+	//подумать над WeaponComponent
+	const auto WeaponComponent = Cast<UMWeaponComponent>(PlayerPawn);
 	if (!WeaponComponent) return false;
 	
 	return WeaponComponent->TryToAddAmmo(WeaponType, ClipsAmount);
