@@ -33,6 +33,7 @@ void AProjectile::BeginPlay()
 	MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
 	CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
 	CollisionComponent->OnComponentHit.AddDynamic(this,&AProjectile::OnProjectileHit);
+	CollisionComponent->bReturnMaterialOnMove = true;
 	SetLifeSpan(LifeSeconds);
 
 	check(WeaponFXComponent);
