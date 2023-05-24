@@ -8,6 +8,7 @@
 
 class UProjectileMovementComponent;
 class USphereComponent;
+class UMWeaponFXComponent;
 
 
 UCLASS()
@@ -40,7 +41,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float LifeSeconds = 5.0f;
 
-	
+	UPROPERTY(VisibleAnywhere, Category = "VFX")
+	UMWeaponFXComponent* WeaponFXComponent;
 	
 	virtual void BeginPlay() override;
 

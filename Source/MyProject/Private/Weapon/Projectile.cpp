@@ -1,11 +1,10 @@
 
-
-
 #include "Weapon/Projectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Weapon/Components/MWeaponFXComponent.h"
 
 AProjectile::AProjectile()
 {
@@ -21,6 +20,8 @@ AProjectile::AProjectile()
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
 	MovementComponent->InitialSpeed = 2000.0f;
 	MovementComponent->ProjectileGravityScale = 0.0f;
+
+	WeaponFXComponent = CreateDefaultSubobject<UMWeaponFXComponent>("WeaponFXComponent");
 }
 
 
@@ -33,6 +34,8 @@ void AProjectile::BeginPlay()
 	CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
 	CollisionComponent->OnComponentHit.AddDynamic(this,&AProjectile::OnProjectileHit);
 	SetLifeSpan(LifeSeconds);
+
+	check(WeaponFXComponent);
 }
 
 void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -53,6 +56,8 @@ void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* Oth
 
 	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24,
 		FColor::Red, false, 0.5f);
+
+	WeaponFXComponent->PlayImpactFX(Hit);
 	
 	Destroy();
 }

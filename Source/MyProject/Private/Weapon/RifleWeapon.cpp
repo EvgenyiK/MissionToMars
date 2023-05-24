@@ -5,8 +5,14 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/DamageEvents.h"
+#include "Weapon/Components/MWeaponFXComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
+
+ARifleWeapon::ARifleWeapon()
+{
+	WeaponFXComponent = CreateDefaultSubobject<UMWeaponFXComponent>("WeaponFXComponent");
+}
 
 void ARifleWeapon::StartFire()
 {
@@ -18,6 +24,12 @@ void ARifleWeapon::StartFire()
 void ARifleWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+}
+
+void ARifleWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	check(WeaponFXComponent);
 }
 
 void ARifleWeapon::MakeShot()
@@ -38,16 +50,17 @@ void ARifleWeapon::MakeShot()
 	if (HitResult.bBlockingHit)
 	{
 		MakeDamage(HitResult);
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Blue, false,  3.0f, 0,
-		3.0f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red,
-			false, 5.0f);
-
+		//DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Blue, false,  3.0f, 0,
+		//3.0f);
+		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red,
+		//	false, 5.0f);
+		WeaponFXComponent->PlayImpactFX(HitResult);
+		
 		UE_LOG(LogRifleWeapon, Display, TEXT("Bone: %s"), *HitResult.BoneName.ToString());
 	}else
 	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false,  3.0f, 0,
-		3.0f);
+		//DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false,  3.0f, 0,
+		//3.0f);
 	}
 
 	DecreaseAmmo();
