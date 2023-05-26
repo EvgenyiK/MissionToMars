@@ -1,11 +1,11 @@
 
-
-
 #include "Component/BaseHealthComponent.h"
-
+#include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
 #include "Math/UnrealMathUtility.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Camera/CameraShakeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All)
 
@@ -60,7 +60,8 @@ void UBaseHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, co
 		GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &UBaseHealthComponent::HealUpdate,
 			HealUpdateTime,true, HealDelay);
 	}
-	
+
+	PlayCamerashake();
 }
 
 void UBaseHealthComponent::HealUpdate()
@@ -78,6 +79,19 @@ void UBaseHealthComponent::SetHealth(float NewHealth)
 {
 	Health = FMath::Clamp(NewHealth,0.0f,MaxHealth);
 	OnHealthChanged.Broadcast(Health);
+}
+
+void UBaseHealthComponent::PlayCamerashake()
+{
+	if (IsDead()) return;
+
+	const auto Player = Cast<APawn>(GetOwner());
+	if (!Player) return;
+
+	const auto Controller = Player->GetController<APlayerController>();
+	if(!Controller || !Controller->PlayerCameraManager) return;
+
+	Controller->PlayerCameraManager->StartCameraShake(CameraShake);
 }
 
 
