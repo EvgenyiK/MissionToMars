@@ -61,7 +61,7 @@ void UBaseHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, co
 			HealUpdateTime,true, HealDelay);
 	}
 
-	PlayCamerashake();
+	PlayCameraShake();
 }
 
 void UBaseHealthComponent::HealUpdate()
@@ -81,7 +81,7 @@ void UBaseHealthComponent::SetHealth(float NewHealth)
 	OnHealthChanged.Broadcast(Health);
 }
 
-void UBaseHealthComponent::PlayCamerashake()
+void UBaseHealthComponent::PlayCameraShake()
 {
 	if (IsDead()) return;
 

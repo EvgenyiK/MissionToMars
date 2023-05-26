@@ -61,5 +61,5 @@ private:
 	void HealUpdate();
 	void SetHealth(float NewHealth);
 
-	void PlayCamerashake();
+	void PlayCameraShake();
 };
