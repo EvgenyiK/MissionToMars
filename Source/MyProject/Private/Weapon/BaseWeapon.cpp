@@ -4,6 +4,8 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Controller.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 
 
@@ -129,6 +131,14 @@ bool ABaseWeapon::IsAmmoFull() const
 {
 	return CurrentAmmo.Clips == DefaultAmmo.Clips &&
 		CurrentAmmo.Bullets == DefaultAmmo.Bullets;
+}
+
+UNiagaraComponent* ABaseWeapon::SpawnMuzzleFX()
+{
+	return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh,
+		MuzzleSocketName, FVector::ZeroVector,
+		FRotator::ZeroRotator,EAttachLocation::SnapToTarget,
+		true);
 }
 
 bool ABaseWeapon::TryToAddAmmo(int32 ClipsAmount)

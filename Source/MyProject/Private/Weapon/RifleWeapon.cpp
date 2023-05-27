@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/DamageEvents.h"
 #include "Weapon/Components/MWeaponFXComponent.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 
@@ -16,14 +17,16 @@ ARifleWeapon::ARifleWeapon()
 
 void ARifleWeapon::StartFire()
 {
-	MakeShot();
+	InitMuzzleFX();
 	GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ARifleWeapon::MakeShot,
 		TimeBetweenShots, true);
+	MakeShot();
 }
 
 void ARifleWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+	SetMuzzleFXVisibility(false);
 }
 
 void ARifleWeapon::BeginPlay()
@@ -86,4 +89,22 @@ void ARifleWeapon::MakeDamage(FHitResult& HitResult)
 
 	DamageActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(),
 							this);
+}
+
+void ARifleWeapon::InitMuzzleFX()
+{
+	if (!MuzzleFXComponent)
+	{
+		MuzzleFXComponent = SpawnMuzzleFX();
+	}
+	SetMuzzleFXVisibility(true);
+}
+
+void ARifleWeapon::SetMuzzleFXVisibility(bool Visible)
+{
+	if (MuzzleFXComponent)
+	{
+		MuzzleFXComponent->SetPaused(!Visible);
+		MuzzleFXComponent->SetVisibility(Visible, true);
+	}
 }
