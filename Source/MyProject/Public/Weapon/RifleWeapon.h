@@ -9,6 +9,7 @@
 class UMWeaponFXComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class MYPROJECT_API ARifleWeapon : public ABaseWeapon
@@ -35,6 +36,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "VFX")
 	UMWeaponFXComponent* WeaponFXComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* TraceFx;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	FString TraceTargetName = "TraceTarget";
+
 	virtual void BeginPlay() override;
 	virtual void MakeShot() override;
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd)const override;
@@ -48,4 +55,5 @@ private:
 	void MakeDamage(FHitResult& HitResult);
 	void InitMuzzleFX();
 	void SetMuzzleFXVisibility(bool Visible);
+	void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 };
