@@ -67,8 +67,7 @@ void UBaseHealthComponent::OnTakeAnyDamage(AActor* DamageActor, float Damage, co
 void UBaseHealthComponent::HealUpdate()
 {
 	SetHealth(Health + HealModifier);
-	OnHealthChanged.Broadcast(Health);
-
+	
 	if (IsHealthFull() && GetWorld())
 	{
 		GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
@@ -77,8 +76,11 @@ void UBaseHealthComponent::HealUpdate()
 
 void UBaseHealthComponent::SetHealth(float NewHealth)
 {
-	Health = FMath::Clamp(NewHealth,0.0f,MaxHealth);
-	OnHealthChanged.Broadcast(Health);
+	const auto NextHealth = FMath::Clamp(NewHealth,0.0f,MaxHealth);
+	const auto HealthDelta = NextHealth - Health;
+	
+	Health = NextHealth;
+	OnHealthChanged.Broadcast(Health, HealthDelta);
 }
 
 void UBaseHealthComponent::PlayCameraShake()
