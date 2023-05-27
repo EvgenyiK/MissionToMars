@@ -55,8 +55,8 @@ void AProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* Oth
 		GetController(),  //
 		DoFullDamage);
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24,
-		FColor::Red, false, 0.5f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24,
+		//FColor::Red, false, 0.5f);
 
 	WeaponFXComponent->PlayImpactFX(Hit);
 	
