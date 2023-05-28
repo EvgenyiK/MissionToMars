@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #pragma once
 
@@ -6,12 +6,13 @@
 #include "AIController.h"
 #include "MAIController.generated.h"
 
-/**
- * 
- */
+
+
 UCLASS()
 class MYPROJECT_API AMAIController : public AAIController
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 };
