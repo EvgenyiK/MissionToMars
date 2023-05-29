@@ -3,6 +3,13 @@
 
 #include "AI/MAIController.h"
 #include "AI/AICharacter.h"
+#include "Component/MAIPerceptionComponent.h"
+
+AMAIController::AMAIController()
+{
+	MAIPerceptionComponent = CreateDefaultSubobject<UMAIPerceptionComponent>("MAIPerceptionComponent");
+	SetPerceptionComponent(*MAIPerceptionComponent);
+}
 
 void AMAIController::OnPossess(APawn* InPawn)
 {
@@ -12,4 +19,11 @@ void AMAIController::OnPossess(APawn* InPawn)
 	{
 		RunBehaviorTree(CharacterAI->UBehaviorTreeAsset);
 	}
+}
+
+void AMAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	const auto AimActor = MAIPerceptionComponent->GetClosesEnemy();
+	SetFocus(AimActor);
 }
