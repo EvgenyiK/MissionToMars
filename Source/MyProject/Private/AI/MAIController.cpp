@@ -4,6 +4,7 @@
 #include "AI/MAIController.h"
 #include "AI/AICharacter.h"
 #include "Component/MAIPerceptionComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AMAIController::AMAIController()
 {
@@ -24,6 +25,13 @@ void AMAIController::OnPossess(APawn* InPawn)
 void AMAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	const auto AimActor = MAIPerceptionComponent->GetClosesEnemy();
+	const auto AimActor = GetFocusOnActor();
 	SetFocus(AimActor);
+}
+
+AActor* AMAIController::GetFocusOnActor() const
+{
+	if(!GetBlackboardComponent()) return nullptr;
+
+	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 }
