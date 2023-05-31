@@ -16,15 +16,15 @@ class MYPROJECT_API UMWeaponComponent : public UActorComponent
 public:
 	UMWeaponComponent();
 
-	void StartFire();
+	virtual void StartFire();
 	void StopFire();
-	void NextWeapon();
+	virtual void NextWeapon();
 
 	bool GetCurrentWeaponUiData(FWeaponUIData& UIData) const;
-	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData)const;
+	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
 	auto TryToAddAmmo(TSubclassOf<ABaseWeapon> WeaponType, int32 ClipsAmount) -> bool;
-	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TArray<TSubclassOf<ABaseWeapon>> WeaponClasses;
@@ -34,31 +34,34 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName WeaponArmorySocketName = "ArmorySocket";
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* EquipAnimMontage;
-	
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:
 	UPROPERTY()
 	ABaseWeapon* CurrentWeapon = nullptr;
 	UPROPERTY()
 	TArray<ABaseWeapon*> Weapons;
 
 	int32 CurrentWeaponIndex = 0;
-	//bool EquipAnimInProgress = false;
 	
-	void SpawnWeapons();
-	void AttachWeaponToSocket(ABaseWeapon* Weapon, USceneComponent* SceneComponent,
-	const FName& SocketName);
-	void EquipWeapon(int32 WeaponIndex);
-
-	void PlayAnimMontage(UAnimMontage* Animation);
-	void InitAnimations();
-	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	//bool CanFire() const;
 	//bool CanEquip() const;
+
+	void EquipWeapon(int32 WeaponIndex);
+	
+
+private:
+	
+	//bool EquipAnimInProgress = false;
+
+	void SpawnWeapons();
+	void AttachWeaponToSocket(ABaseWeapon* Weapon, USceneComponent* SceneComponent,
+	                          const FName& SocketName);
+	void PlayAnimMontage(UAnimMontage* Animation);
+	void InitAnimations();
+	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
 };
