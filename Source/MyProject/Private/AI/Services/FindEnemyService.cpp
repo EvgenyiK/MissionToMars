@@ -1,7 +1,6 @@
 
 #include "AI/Services/FindEnemyService.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "AIController.h"
 #include "MUtils.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Component/MAIPerceptionComponent.h"

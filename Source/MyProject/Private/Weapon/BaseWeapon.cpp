@@ -8,7 +8,6 @@
 #include "NiagaraComponent.h"
 
 
-
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
 ABaseWeapon::ABaseWeapon()
@@ -25,7 +24,6 @@ void ABaseWeapon::StartFire()
 void ABaseWeapon::StopFire()
 {
 }
-
 
 
 void ABaseWeapon::MakeShot()
@@ -52,10 +50,23 @@ APlayerController* ABaseWeapon::GetPlayerController() const
 
 bool ABaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-	const auto Controller = GetPlayerController();
-	if (!Controller) return false;
+	const auto MCharacter = Cast<ACharacter>(GetOwner());
+	if (!MCharacter) return false;
 
-	Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+	if (MCharacter->IsPawnControlled())
+	{
+		const auto Controller = GetPlayerController();
+		if (!Controller) return false;
+
+		Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+	}
+	else
+	{
+		ViewLocation = GetMuzzleWorldLocation();
+		ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+	}
+
+
 	return true;
 }
 
@@ -71,7 +82,7 @@ bool ABaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	if (!GetPlayerViewPoint(ViewLocation, ViewRotation)) return false;
 
 	TraceStart = ViewLocation;
-	
+
 	const FVector ShootDirection = ViewRotation.Vector();
 	TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
 	return true;
@@ -84,7 +95,7 @@ void ABaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, cons
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(GetOwner());
 	CollisionParams.bReturnPhysicalMaterial = true;
-	
+
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_Visibility,
 	                                     CollisionParams);
 }
@@ -136,9 +147,9 @@ bool ABaseWeapon::IsAmmoFull() const
 UNiagaraComponent* ABaseWeapon::SpawnMuzzleFX()
 {
 	return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX, WeaponMesh,
-		MuzzleSocketName, FVector::ZeroVector,
-		FRotator::ZeroRotator,EAttachLocation::SnapToTarget,
-		true);
+	                                                    MuzzleSocketName, FVector::ZeroVector,
+	                                                    FRotator::ZeroRotator, EAttachLocation::SnapToTarget,
+	                                                    true);
 }
 
 bool ABaseWeapon::TryToAddAmmo(int32 ClipsAmount)
@@ -149,21 +160,23 @@ bool ABaseWeapon::TryToAddAmmo(int32 ClipsAmount)
 	{
 		UE_LOG(LogBaseWeapon, Display, TEXT("Ammo was empty"));
 		CurrentAmmo.Clips = FMath::Clamp(ClipsAmount, 0, DefaultAmmo.Clips);
-		
-	}else if (CurrentAmmo.Clips < DefaultAmmo.Clips)
+	}
+	else if (CurrentAmmo.Clips < DefaultAmmo.Clips)
 	{
 		const auto NextClipsAmount = CurrentAmmo.Clips + ClipsAmount;
 		if (DefaultAmmo.Clips - NextClipsAmount >= 0)
 		{
 			CurrentAmmo.Clips = NextClipsAmount;
 			UE_LOG(LogBaseWeapon, Display, TEXT("Clips were added"));
-		}else
+		}
+		else
 		{
 			CurrentAmmo.Clips = DefaultAmmo.Clips;
 			CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 			UE_LOG(LogBaseWeapon, Display, TEXT("Ammo is full now"));
 		}
-	}else
+	}
+	else
 	{
 		CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 		UE_LOG(LogBaseWeapon, Display, TEXT("Bullets were added"));
