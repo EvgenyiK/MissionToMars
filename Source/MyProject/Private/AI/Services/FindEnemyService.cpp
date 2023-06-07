@@ -13,7 +13,6 @@ UFindEnemyService::UFindEnemyService()
 
 void UFindEnemyService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
-	
 	const auto Blackboard = OwnerComp.GetBlackboardComponent();
 	if (Blackboard)
 	{

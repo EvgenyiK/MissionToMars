@@ -5,6 +5,7 @@
 #include "AI/MAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Component/MAIWeaponComponent.h"
+#include "BrainComponent.h"
 
 AAICharacter::AAICharacter(const FObjectInitializer& ObjInit)
 	//:Super(ObjInit.SetDefaultSubobjectClass<UMAIWeaponComponent>("WeaponComponent"))
@@ -17,5 +18,16 @@ AAICharacter::AAICharacter(const FObjectInitializer& ObjInit)
 	{
 		GetCharacterMovement()->bUseControllerDesiredRotation = true;
 		GetCharacterMovement()->RotationRate = FRotator(0.0f,200.0f, 0.0f);
+	}
+}
+
+void AAICharacter::OnDeath()
+{
+	Super::OnDeath();
+
+	const auto MController = Cast<AAIController>(Controller);
+	if (MController && MController->BrainComponent)
+	{
+		MController->BrainComponent->Cleanup();
 	}
 }
