@@ -30,8 +30,10 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	
+	bool CouldBeTaken() const;
 private:
+	FTimerHandle RespawnTimerHandle;
+	
 	virtual bool GivePickupTo(APawn* PlayerPawn);
 	void PickupWasTaken();
 	void Respawn();
