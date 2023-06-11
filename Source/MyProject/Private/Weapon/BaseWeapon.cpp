@@ -128,7 +128,7 @@ void ABaseWeapon::ChangeClip()
 	{
 		CurrentAmmo.Clips--;
 	}
-	UE_LOG(LogBaseWeapon, Display, TEXT("---Change Clip---"));
+	//UE_LOG(LogBaseWeapon, Display, TEXT("---Change Clip---"));
 }
 
 void ABaseWeapon::LogAmmo()

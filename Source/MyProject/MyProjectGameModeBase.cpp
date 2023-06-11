@@ -8,6 +8,10 @@
 #include "Player/BasePlayerController.h"
 #include "UI/GameHUD.h"
 
+
+DEFINE_LOG_CATEGORY_STATIC(LogGameModeBase, All, All);
+
+
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
 	DefaultPawnClass = ABaseCharacter::StaticClass();
@@ -19,6 +23,9 @@ void AMyProjectGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	SpawnBots();
+
+	CurrentRound = 1;
+	StartRound();
 }
 
 UClass* AMyProjectGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -42,5 +49,31 @@ void AMyProjectGameModeBase::SpawnBots()
 
 		const auto MAIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
 		RestartPlayer(MAIController);
+	}
+}
+
+void AMyProjectGameModeBase::StartRound()
+{
+	RoundCountDown = GameData.RoundTime;
+	GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &AMyProjectGameModeBase::GameTimerUpdate,
+		1.0f, true);
+}
+
+void AMyProjectGameModeBase::GameTimerUpdate()
+{
+	UE_LOG(LogGameModeBase, Display, TEXT("Time: %i / Round: %i/%i "), RoundCountDown, CurrentRound, GameData.RoundsNum);
+	
+	if(--RoundCountDown == 0)
+	{
+		GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
+		if(CurrentRound + 1 <= GameData.RoundsNum )
+		{
+			++CurrentRound;
+			StartRound();
+		}
+		else
+		{
+			UE_LOG(LogGameModeBase, Display, TEXT("---GAME OWER---"))
+		}
 	}
 }
