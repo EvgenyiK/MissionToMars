@@ -10,6 +10,8 @@ AMAIController::AMAIController()
 {
 	MAIPerceptionComponent = CreateDefaultSubobject<UMAIPerceptionComponent>("MAIPerceptionComponent");
 	SetPerceptionComponent(*MAIPerceptionComponent);
+
+	bWantsPlayerState = true;
 }
 
 void AMAIController::OnPossess(APawn* InPawn)
