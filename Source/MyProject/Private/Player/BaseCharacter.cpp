@@ -86,6 +86,14 @@ bool ABaseCharacter::IsRunning() const
 	return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
 }
 
+void ABaseCharacter::SetPlayerColor(const FLinearColor& Color)
+{
+	const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+	if(!MaterialInst) return;
+
+	MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
 void ABaseCharacter::MoveForward(float Amount)
 {
 	IsMovingForward = Amount > 0.0f;
