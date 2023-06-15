@@ -40,6 +40,25 @@ UClass* AMyProjectGameModeBase::GetDefaultPawnClassForController_Implementation(
 	return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
+void AMyProjectGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+	const auto KillerPlayerState = KillerController ? Cast<AMPlayerState>(KillerController->PlayerState)
+	: nullptr;
+
+	const auto VictimPlayerState = VictimController ? Cast<AMPlayerState>(VictimController->PlayerState)
+	: nullptr;
+
+	if (KillerPlayerState)
+	{
+		KillerPlayerState->AddKill();
+	}
+
+	if (VictimPlayerState)
+	{
+		VictimPlayerState->AddDeath();
+	}
+}
+
 void AMyProjectGameModeBase::SpawnBots()
 {
 	if (!GetWorld()) return;
@@ -78,6 +97,7 @@ void AMyProjectGameModeBase::GameTimerUpdate()
 		else
 		{
 			UE_LOG(LogGameModeBase, Display, TEXT("---GAME OWER---"))
+			LogPlayerInfo();
 		}
 	}
 }
@@ -147,4 +167,21 @@ void AMyProjectGameModeBase::SetPlayerColor(AController* Controller)
 	if(!PlayerState) return;
 
 	Character->SetPlayerColor(PlayerState->GetTeamColor());
+}
+
+void AMyProjectGameModeBase::LogPlayerInfo()
+{
+
+	if(!GetWorld()) return;
+	
+	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		const auto Controller = It->Get();
+		if (!Controller) continue;
+
+		const auto PlayerState = Cast<AMPlayerState>(Controller->PlayerState);
+		if (!PlayerState) continue;
+
+		PlayerState->LogInfo();
+	}
 }

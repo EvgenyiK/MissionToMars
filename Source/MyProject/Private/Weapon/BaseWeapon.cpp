@@ -40,14 +40,6 @@ void ABaseWeapon::BeginPlay()
 }
 
 
-APlayerController* ABaseWeapon::GetPlayerController() const
-{
-	const auto Player = Cast<ACharacter>(GetOwner());
-	if (!Player) return nullptr;
-
-	return Player->GetController<APlayerController>();
-}
-
 bool ABaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
 	const auto MCharacter = Cast<ACharacter>(GetOwner());
@@ -55,7 +47,7 @@ bool ABaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotati
 
 	if (MCharacter->IsPawnControlled())
 	{
-		const auto Controller = GetPlayerController();
+		const auto Controller = MCharacter->GetController<APlayerController>();
 		if (!Controller) return false;
 
 		Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
