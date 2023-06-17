@@ -8,10 +8,13 @@
 #include "Player/BasePlayerController.h"
 #include "UI/GameHUD.h"
 #include "Player/MPlayerState.h"
+#include "MUtils.h"
+#include "Component/RespawnComponent.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogGameModeBase, All, All);
 
+constexpr static int32 MinRoundTimeForeRespawn = 10;
 
 AMyProjectGameModeBase::AMyProjectGameModeBase()
 {
@@ -57,6 +60,13 @@ void AMyProjectGameModeBase::Killed(AController* KillerController, AController* 
 	{
 		VictimPlayerState->AddDeath();
 	}
+
+	StartRespawn(VictimController);
+}
+
+void AMyProjectGameModeBase::RespawnRequest(AController* Controller)
+{
+	ResetOnePlayer(Controller);
 }
 
 void AMyProjectGameModeBase::SpawnBots()
@@ -184,4 +194,15 @@ void AMyProjectGameModeBase::LogPlayerInfo()
 
 		PlayerState->LogInfo();
 	}
+}
+
+void AMyProjectGameModeBase::StartRespawn(AController* Controller)
+{
+	const auto RespawnAvailable = RoundCountDown > MinRoundTimeForeRespawn + GameData.RespawnTime;
+	if(!RespawnAvailable)return;
+	
+	const auto RespawnComponent = MUtils::GetMPlayerComponent<URespawnComponent>(Controller);
+	if(!RespawnComponent) return;
+
+	RespawnComponent->Respawn(GameData.RespawnTime);
 }

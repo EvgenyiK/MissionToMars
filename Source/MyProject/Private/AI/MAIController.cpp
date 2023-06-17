@@ -1,15 +1,16 @@
 
-
-
 #include "AI/MAIController.h"
 #include "AI/AICharacter.h"
 #include "Component/MAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Component/RespawnComponent.h"
 
 AMAIController::AMAIController()
 {
 	MAIPerceptionComponent = CreateDefaultSubobject<UMAIPerceptionComponent>("MAIPerceptionComponent");
 	SetPerceptionComponent(*MAIPerceptionComponent);
+
+	RespawnComponent = CreateDefaultSubobject<URespawnComponent>("RespawnComponent");
 
 	bWantsPlayerState = true;
 }

@@ -7,6 +7,7 @@
 #include "MAIController.generated.h"
 
 class UMAIPerceptionComponent;
+class URespawnComponent;
 
 UCLASS()
 class MYPROJECT_API AMAIController : public AAIController
@@ -19,6 +20,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category = "Components")
 	UMAIPerceptionComponent* MAIPerceptionComponent;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category = "Components")
+	URespawnComponent* RespawnComponent;
 	
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category = "AI")
 	FName FocusOnKeyName = "EnemyActor";
