@@ -15,6 +15,11 @@ void URespawnComponent::Respawn(int32 RespawnTime)
 	                                       true);
 }
 
+bool URespawnComponent::IsRespawnInProgress() const
+{
+	return GetWorld() && GetWorld()->GetTimerManager().IsTimerActive(RespawnTimerHandle);
+}
+
 void URespawnComponent::RespawnTimerUpdate()
 {
 	if(--RespawnCountDown == 0)
