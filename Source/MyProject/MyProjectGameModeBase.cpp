@@ -10,6 +10,7 @@
 #include "Player/MPlayerState.h"
 #include "MUtils.h"
 #include "Component/RespawnComponent.h"
+#include "EngineUtils.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogGameModeBase, All, All);
@@ -106,8 +107,7 @@ void AMyProjectGameModeBase::GameTimerUpdate()
 		}
 		else
 		{
-			UE_LOG(LogGameModeBase, Display, TEXT("---GAME OWER---"))
-			LogPlayerInfo();
+			GameOver();
 		}
 	}
 }
@@ -205,4 +205,19 @@ void AMyProjectGameModeBase::StartRespawn(AController* Controller)
 	if(!RespawnComponent) return;
 
 	RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
+void AMyProjectGameModeBase::GameOver()
+{
+	UE_LOG(LogGameModeBase, Display, TEXT("---GAME OWER---"))
+	LogPlayerInfo();
+
+	for (auto Pawn : TActorRange<APawn>(GetWorld()))
+	{
+		if(Pawn)
+		{
+			Pawn->TurnOff();
+			Pawn->DisableInput(nullptr);
+		}
+	}
 }
