@@ -1,7 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "UI/PlayerHUDWidget.h"
+
+#include "MUtils.h"
 #include "Component/BaseHealthComponent.h"
 #include "Component/MWeaponComponent.h"
 
@@ -46,12 +46,12 @@ bool UPlayerHUDWidget::IsPlayerSpectating() const
 
 bool UPlayerHUDWidget::Initialize()
 {
-	const auto HealthComponent = GetHealthComponent();
-	if (HealthComponent)
+	if (GetOwningPlayer())
 	{
-		HealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHUDWidget::OnHealthChanged);
+		GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UPlayerHUDWidget::OnNewPawn);
+		OnNewPawn(GetOwningPlayerPawn());
 	}
-	
+
 	return Super::Initialize();
 }
 
@@ -80,6 +80,16 @@ void UPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 	if (HealthDelta < 0.0f)
 	{
 		OnTakeDamage();
+	}
+	
+}
+
+void UPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
+{
+	const auto HealthComponent = MUtils::GetMPlayerComponent<UBaseHealthComponent>(NewPawn);
+	if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this))
+	{
+		HealthComponent->OnHealthChanged.AddUObject(this, &UPlayerHUDWidget::OnHealthChanged);
 	}
 	
 }
