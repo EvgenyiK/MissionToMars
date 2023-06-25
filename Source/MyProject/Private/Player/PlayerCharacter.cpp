@@ -108,6 +108,18 @@ void APlayerCharacter::CheckCameraOverlap()
 {
 	const auto HideMesh = CameraCollisionComponent->IsOverlappingComponent(GetCapsuleComponent());
 	GetMesh()->SetOwnerNoSee(HideMesh);
+
+	TArray<USceneComponent*> MeshChildren;
+	GetMesh()->GetChildrenComponents(true, MeshChildren);
+
+	for (auto MeshChild : MeshChildren)
+	{
+		const auto MeshChildGeometry = Cast<UPrimitiveComponent>(MeshChild);
+		if (MeshChildGeometry)
+		{
+			MeshChildGeometry->SetOwnerNoSee(HideMesh);
+		}
+	}
 }
 
 void APlayerCharacter::OnDeath()
