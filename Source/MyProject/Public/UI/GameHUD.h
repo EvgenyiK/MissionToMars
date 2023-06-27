@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "MyProject/Public/Coretypes.h"
 #include "GameHUD.generated.h"
 
 /**
@@ -25,4 +26,5 @@ protected:
 	
 private:
 	void DrawCrossHair();
+	void OnMatchStateChanged(EMatchState State);
 };
