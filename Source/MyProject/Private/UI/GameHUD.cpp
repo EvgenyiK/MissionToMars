@@ -17,16 +17,23 @@ void AGameHUD::DrawHUD()
 void AGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
-	if(PlayerHUDWidget)
+
+	GameWidgets.Add(EMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+	GameWidgets.Add(EMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+
+	for (auto GameWidgetPair : GameWidgets)
 	{
-		PlayerHUDWidget->AddToViewport();
+		const auto GameWidget = GameWidgetPair.Value;
+		if (!GameWidget) continue;
+
+		GameWidget->AddToViewport();
+		GameWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
-	if(GetWorld())
+	if (GetWorld())
 	{
 		const auto GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
-		if(GameMode)
+		if (GameMode)
 		{
 			GameMode->OnMatchStateChanged.AddUObject(this, &AGameHUD::OnMatchStateChanged);
 		}
@@ -35,20 +42,34 @@ void AGameHUD::BeginPlay()
 
 void AGameHUD::DrawCrossHair()
 {
+	const TInterval<float> Center(Canvas->SizeX * 0.5f, Canvas->SizeY * 0.5f);
 
-	const TInterval<float>Center(Canvas->SizeX * 0.5f,Canvas->SizeY * 0.5f);
-	
 	const float HalfLineSize = 10.0f;
 	const float LineThickness = 2.0f;
 	const FLinearColor LineColor = FLinearColor::Green;
-	
-	DrawLine(Center.Min - HalfLineSize,Center.Max, Center.Min + HalfLineSize, Center.Max,
-		LineColor, LineThickness);
+
+	DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max,
+	         LineColor, LineThickness);
 	DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize,
-		LineColor, LineThickness);
+	         LineColor, LineThickness);
 }
 
 void AGameHUD::OnMatchStateChanged(EMatchState State)
 {
-	UE_LOG(LogGameHUD,Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State));
+	if(CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if(GameWidgets.Contains(State))
+	{
+		CurrentWidget = GameWidgets[State];
+	}
+
+	if(CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	
+	UE_LOG(LogGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State));
 }

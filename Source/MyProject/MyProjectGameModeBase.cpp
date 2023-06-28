@@ -72,6 +72,18 @@ void AMyProjectGameModeBase::RespawnRequest(AController* Controller)
 	ResetOnePlayer(Controller);
 }
 
+bool AMyProjectGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+	const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
+
+	if(PauseSet)
+	{
+		SetMatchState(EMatchState::Pause);
+	}
+	
+	return PauseSet;
+}
+
 void AMyProjectGameModeBase::SpawnBots()
 {
 	if (!GetWorld()) return;
