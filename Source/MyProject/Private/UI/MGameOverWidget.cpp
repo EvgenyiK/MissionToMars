@@ -5,9 +5,13 @@
 #include "UI/MPlayerStatRowWidget.h"
 #include "Components/VerticalBox.h"
 #include "MUtils.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
-bool UMGameOverWidget::Initialize()
+
+void UMGameOverWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
 	if (GetWorld())
 	{
 		const auto GameMode = Cast<AMyProjectGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -16,8 +20,8 @@ bool UMGameOverWidget::Initialize()
 			GameMode->OnMatchStateChanged.AddUObject(this, &UMGameOverWidget::OnMatchStateChanged);
 		}
 	}
-	return Super::Initialize();
 }
+
 
 void UMGameOverWidget::OnMatchStateChanged(EMatchState State)
 {
@@ -53,4 +57,9 @@ void UMGameOverWidget::UpdatePlayersStat()
 
 		PlayerStatBox->AddChild(PlayerStateRowWidget);
 	}
+}
+
+void UMGameOverWidget::OnResetLevel()
+{
+	
 }

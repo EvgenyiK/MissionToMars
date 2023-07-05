@@ -84,6 +84,17 @@ bool AMyProjectGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpa
 	return PauseSet;
 }
 
+bool AMyProjectGameModeBase::ClearPause()
+{
+	const auto PauseCleared = Super::ClearPause();
+	if(PauseCleared)
+	{
+		SetMatchState(EMatchState::InProgress);
+	}
+
+	return PauseCleared;
+}
+
 void AMyProjectGameModeBase::SpawnBots()
 {
 	if (!GetWorld()) return;

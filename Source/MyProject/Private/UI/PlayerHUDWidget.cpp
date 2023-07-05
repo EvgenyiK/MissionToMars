@@ -44,15 +44,14 @@ bool UPlayerHUDWidget::IsPlayerSpectating() const
 	return Controller && Controller->GetStateName() == NAME_Spectating;
 }
 
-bool UPlayerHUDWidget::Initialize()
+void UPlayerHUDWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
 	if (GetOwningPlayer())
 	{
 		GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UPlayerHUDWidget::OnNewPawn);
 		OnNewPawn(GetOwningPlayerPawn());
 	}
-
-	return Super::Initialize();
 }
 
 UMWeaponComponent* UPlayerHUDWidget::GetWeaponComponent() const

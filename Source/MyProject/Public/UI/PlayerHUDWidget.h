@@ -40,7 +40,7 @@ public:
 	void OnTakeDamage();
 
 	
-	virtual bool Initialize() override;
+	virtual void NativeOnInitialized() override;
 	
 private:
 	UMWeaponComponent* GetWeaponComponent() const;
