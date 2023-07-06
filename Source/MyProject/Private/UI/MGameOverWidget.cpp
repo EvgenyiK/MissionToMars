@@ -1,4 +1,3 @@
-
 #include "UI/MGameOverWidget.h"
 #include "MyProject/MyProjectGameModeBase.h"
 #include "Player/MPlayerState.h"
@@ -20,12 +19,17 @@ void UMGameOverWidget::NativeOnInitialized()
 			GameMode->OnMatchStateChanged.AddUObject(this, &UMGameOverWidget::OnMatchStateChanged);
 		}
 	}
+
+	if (ResetLevelButton)
+	{
+		ResetLevelButton->OnClicked.AddDynamic(this, &UMGameOverWidget::UMGameOverWidget::OnResetLevel);
+	}
 }
 
 
 void UMGameOverWidget::OnMatchStateChanged(EMatchState State)
 {
-	if(State == EMatchState::GameOver)
+	if (State == EMatchState::GameOver)
 	{
 		UpdatePlayersStat();
 	}
@@ -33,21 +37,21 @@ void UMGameOverWidget::OnMatchStateChanged(EMatchState State)
 
 void UMGameOverWidget::UpdatePlayersStat()
 {
-	if(!GetWorld() || !PlayerStatBox) return;
+	if (!GetWorld() || !PlayerStatBox) return;
 
 	PlayerStatBox->ClearChildren();
-	
+
 	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
 	{
 		const auto Controller = It->Get();
-		if(!Controller) continue;
+		if (!Controller) continue;
 
 		const auto PlayerState = Cast<AMPlayerState>(Controller->PlayerState);
-		if(!PlayerState)continue;
+		if (!PlayerState)continue;
 
 		const auto PlayerStateRowWidget = CreateWidget<UMPlayerStatRowWidget>(GetWorld(),
-			PlayerStatRowWidgetClass);
-		if(!PlayerStateRowWidget) continue;
+		                                                                      PlayerStatRowWidgetClass);
+		if (!PlayerStateRowWidget) continue;
 
 		PlayerStateRowWidget->SetPlayerName(FText::FromString(PlayerState->GetPlayerName()));
 		PlayerStateRowWidget->SetKills(MUtils::TextFromInt(PlayerState->GetKillsNum()));
@@ -61,5 +65,8 @@ void UMGameOverWidget::UpdatePlayersStat()
 
 void UMGameOverWidget::OnResetLevel()
 {
+	//const FName CurrentLevelName = "MarsMap";
+	const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
+	UGameplayStatics::OpenLevel(this, FName(CurrentLevelName));
 	
 }

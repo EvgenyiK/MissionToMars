@@ -13,13 +13,13 @@ class MYPROJECT_API UMPauseWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	virtual void NativeOnInitialized() override;
-	
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* ClearPauseButton;
 
+	virtual void NativeOnInitialized() override;
+	
 private:
 	UFUNCTION()
 	void OnClearPause();

@@ -40,6 +40,7 @@ public:
 	void OnTakeDamage();
 
 	
+protected:	
 	virtual void NativeOnInitialized() override;
 	
 private:
