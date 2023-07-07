@@ -29,9 +29,6 @@ AMyProjectGameModeBase::AMyProjectGameModeBase()
 void AMyProjectGameModeBase::StartPlay()
 {
 	Super::StartPlay();
-
-	UE_LOG(LogGameModeBase, Display, TEXT("%s"), *GetWorld()->GetGameInstance<UMGameInstance>()->TestString);
-	
 	SpawnBots();
 	CreateTeamsInfo();
 	CurrentRound = 1;

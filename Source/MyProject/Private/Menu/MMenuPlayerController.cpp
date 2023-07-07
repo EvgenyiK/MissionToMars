@@ -8,6 +8,5 @@ void AMMenuPlayerController::BeginPlay()
 
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
-
-	GetWorld()->GetGameInstance<UMGameInstance>()->TestString = "Menu level says hello";
+	
 }
