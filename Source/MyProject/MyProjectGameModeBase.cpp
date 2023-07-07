@@ -11,6 +11,7 @@
 #include "MUtils.h"
 #include "Component/RespawnComponent.h"
 #include "EngineUtils.h"
+#include "MGameInstance.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogGameModeBase, All, All);
@@ -28,6 +29,9 @@ AMyProjectGameModeBase::AMyProjectGameModeBase()
 void AMyProjectGameModeBase::StartPlay()
 {
 	Super::StartPlay();
+
+	UE_LOG(LogGameModeBase, Display, TEXT("%s"), *GetWorld()->GetGameInstance<UMGameInstance>()->TestString);
+	
 	SpawnBots();
 	CreateTeamsInfo();
 	CurrentRound = 1;
