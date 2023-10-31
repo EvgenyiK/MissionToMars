@@ -15,9 +15,12 @@ class MYPROJECT_API UMGameInstance : public UGameInstance
 
 public:
 	FName GetStartupLevelName() const {return StartupLevelName;}
+	FName GetMenuevelName() const {return MenuLevelName;}
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	FName StartupLevelName = NAME_None;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	FName MenuLevelName = NAME_None;
 };
