@@ -23,11 +23,11 @@ void UMGoToMenuWidget::OnGoToMenu()
 	const auto MGameInstance = GetWorld()->GetGameInstance<UMGameInstance>();
 	if(!MGameInstance) return;
 
-	if(MGameInstance->GetMenuevelName().IsNone())
+	if(MGameInstance->GetMenuLevelName().IsNone())
 	{
 		UE_LOG(LogMGoToMenuWidget, Error, TEXT("Menu Level name is NONE"));
 		return;
 	}
 	
-	UGameplayStatics::OpenLevel(this,  MGameInstance->GetMenuevelName());
+	UGameplayStatics::OpenLevel(this,  MGameInstance->GetMenuLevelName());
 }
