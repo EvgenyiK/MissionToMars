@@ -47,8 +47,8 @@ protected:
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	virtual void OnDeath();
+	virtual void  OnHealthChanged(float Health, float HealthDelta);
 
 public:
 	// Called every frame
@@ -63,8 +63,6 @@ private:
 	bool WantsToRun = false;
 	bool IsMovingForward = false;
 	
-	void OnHealthChanged(float Health, float HealthDelta);
-
 	UFUNCTION()
 	void OnGroundLanded(const FHitResult& Hit);
 };
