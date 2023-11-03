@@ -13,9 +13,7 @@ class MYPROJECT_API UMGameDataWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	int32 GetKillsNum() const;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	int32 GetCurrentRoundNum() const;
 

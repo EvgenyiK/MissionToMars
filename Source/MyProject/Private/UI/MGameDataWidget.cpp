@@ -2,12 +2,7 @@
 #include "MyProject/MyProjectGameModeBase.h"
 #include "Player/MPlayerState.h"
 
-int32 UMGameDataWidget::GetKillsNum() const
-{
-	const auto PlayerS = GetPlayerState();
-	const auto PlayerState = Cast<AMPlayerState>(PlayerS);
-	return PlayerState ? PlayerState->GetKillsNum() : 0;
-}
+
 
 int32 UMGameDataWidget::GetCurrentRoundNum() const
 {
