@@ -1,6 +1,6 @@
 
 #include "Menu/UI/MMenuHUD.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/MBaseWidget.h"
 
 
 void AMMenuHUD::BeginPlay()
@@ -9,10 +9,11 @@ void AMMenuHUD::BeginPlay()
 
 	if(MenuWidgetClass)
 	{
-		const auto MenuWidget = CreateWidget<UUserWidget>(GetWorld(), MenuWidgetClass);
+		const auto MenuWidget = CreateWidget<UMBaseWidget>(GetWorld(), MenuWidgetClass);
 		if(MenuWidget)
 		{
 			MenuWidget->AddToViewport();
+			MenuWidget->Show();
 		}
 	}
 }

@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/MBaseWidget.h"
 #include "MPauseWidget.generated.h"
 
 class UButton;
 
 UCLASS()
-class MYPROJECT_API UMPauseWidget : public UUserWidget
+class MYPROJECT_API UMPauseWidget : public UMBaseWidget
 {
 	GENERATED_BODY()
 

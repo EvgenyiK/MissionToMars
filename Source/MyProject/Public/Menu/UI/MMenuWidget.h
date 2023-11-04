@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/MBaseWidget.h"
 #include "MyProject/Public/Coretypes.h"
 #include "MMenuWidget.generated.h"
 
@@ -13,7 +13,7 @@ class UMGameInstance;
 class UMLevelItemWidget;
 
 UCLASS()
-class MYPROJECT_API UMMenuWidget : public UUserWidget
+class MYPROJECT_API UMMenuWidget : public UMBaseWidget
 {
 	GENERATED_BODY()
 

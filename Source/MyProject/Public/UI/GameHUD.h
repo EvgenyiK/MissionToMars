@@ -7,9 +7,9 @@
 #include "MyProject/Public/Coretypes.h"
 #include "GameHUD.generated.h"
 
-/**
- * 
- */
+
+class UMBaseWidget;
+
 UCLASS()
 class MYPROJECT_API AGameHUD : public AHUD
 {
@@ -32,10 +32,10 @@ protected:
 	
 private:
 	UPROPERTY()
-	TMap<EMatchState, UUserWidget*> GameWidgets; 
+	TMap<EMatchState, UMBaseWidget*> GameWidgets; 
 
 	UPROPERTY()
-	UUserWidget* CurrentWidget = nullptr;
+	UMBaseWidget* CurrentWidget = nullptr;
 	
 	void DrawCrossHair();
 	void OnMatchStateChanged(EMatchState State);
