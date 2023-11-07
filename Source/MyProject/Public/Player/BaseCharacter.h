@@ -11,6 +11,7 @@
 
 class UBaseHealthComponent;
 class UMWeaponComponent;
+class USoundCue;
 
 
 UCLASS()
@@ -44,6 +45,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Material")
 	FName MaterialColorName = "TeamColor";
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* DeathSound;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
