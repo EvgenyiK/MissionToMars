@@ -6,6 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/HorizontalBox.h"
 #include "Menu/UI/MLevelItemWidget.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMMenuWidget, All, All);
 
@@ -33,6 +34,7 @@ void UMMenuWidget::OnStartGame()
 	if(!MGameInstance) return;
 	
 	UGameplayStatics::OpenLevel(this,  MGameInstance->GetStartupLevelName().LevelName);
+	UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void UMMenuWidget::OnQuitGame()
