@@ -76,4 +76,4 @@ DerivedDataCache/*
 .idea/*
 
 Platforms/*
-Content/*
+# *Content
